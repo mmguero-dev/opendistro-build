@@ -87,10 +87,6 @@ jobs:
     needs: [build-es-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-ism-nosec-arm64]
     name: Test-ISM-NoSec
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - name: Set up AWS Cred
         uses: aws-actions/configure-aws-credentials@v1
@@ -98,10 +94,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
       - uses: actions/checkout@v1
       - name: Required Packages
         run: ./release-tools/scripts/required_packages.sh
@@ -121,10 +113,6 @@ jobs:
     needs: [build-es-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-alerting-nosec-arm64]
     name: Test-Alerting-NoSec
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - name: Set up AWS Cred
         uses: aws-actions/configure-aws-credentials@v1
@@ -132,10 +120,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
       - uses: actions/checkout@v1
       - name: Required Packages
         run: ./release-tools/scripts/required_packages.sh
@@ -155,10 +139,6 @@ jobs:
     needs: [build-es-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-sql-nosec-arm64]
     name: Test-SQL-NoSec
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - name: Set up AWS Cred
         uses: aws-actions/configure-aws-credentials@v1
@@ -166,10 +146,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
       - uses: actions/checkout@v1
       - name: Required Packages
         run: ./release-tools/scripts/required_packages.sh
@@ -190,10 +166,6 @@ jobs:
     needs: [build-es-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-knn-nosec-arm64]
     name: Test-KNN-NoSec
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - name: Set up AWS Cred
         uses: aws-actions/configure-aws-credentials@v1
@@ -201,10 +173,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
       - uses: actions/checkout@v1
       - name: Required Packages
         run: ./release-tools/scripts/required_packages.sh
@@ -225,10 +193,6 @@ jobs:
     needs: [build-es-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-ad-nosec-arm64]
     name: Test-AD-NoSec
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - name: Set up AWS Cred
         uses: aws-actions/configure-aws-credentials@v1
@@ -236,10 +200,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
       - uses: actions/checkout@v1
       - name: Required Packages
         run: ./release-tools/scripts/required_packages.sh
@@ -259,10 +219,6 @@ jobs:
     needs: [build-es-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-sql-arm64]
     name: Test-SQL
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - name: Set up AWS Cred
         uses: aws-actions/configure-aws-credentials@v1
@@ -270,10 +226,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
       - uses: actions/checkout@v1
       - name: Required Packages
         run: ./release-tools/scripts/required_packages.sh
@@ -294,10 +246,6 @@ jobs:
     needs: [build-es-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-ad-arm64]
     name: Test-AD
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - name: Set up AWS Cred
         uses: aws-actions/configure-aws-credentials@v1
@@ -305,10 +253,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
       - uses: actions/checkout@v1
       - name: Required Packages
         run: ./release-tools/scripts/required_packages.sh
@@ -329,10 +273,6 @@ jobs:
     needs: [build-es-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-alerting-arm64]
     name: Test-ALERTING
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - uses: actions/checkout@v1
       - name: Set up AWS Cred
@@ -351,11 +291,6 @@ jobs:
           repository: opendistro-for-elasticsearch/alerting
           ref: ${{env.p_tag_alerting}}
 
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
-
       - name: IT
         run: |
           ./release-tools/scripts/setup_runners_service.sh zip --es arm64
@@ -367,10 +302,6 @@ jobs:
     needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-ad-kibana-nosec-arm64]
     name: Test-AD-KIBANA-NoSec
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - uses: actions/checkout@v1
       - name: Set up AWS Cred
@@ -400,10 +331,6 @@ jobs:
           ref: ${{env.p_tag_ad}}
           path: kibana/plugins/anomaly-detection-kibana-plugin
       
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
       
       - name: Get node and yarn versions
         id: node_yarn_versions
@@ -441,10 +368,6 @@ jobs:
     needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-sql-kibana-nosec-arm64]
     name: Test-SQL-KIBANA-NoSec
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - uses: actions/checkout@v1
       - name: Set up AWS Cred
@@ -474,10 +397,6 @@ jobs:
           ref: ${{env.p_tag_sql_kibana}}
           path: kibana/plugins/sql
       
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
       
       - name: Get node and yarn versions
         id: node_yarn_versions
@@ -530,10 +449,6 @@ jobs:
     needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-kibana-nb-nosec-arm64]
     name: Test-Kibana-Notebooks-NoSec
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - uses: actions/checkout@v1
       - name: Set up AWS Cred
@@ -565,10 +480,6 @@ jobs:
           ref: ${{env.p_tag_kib_nb}}
           path: kibana/plugins/kibana-notebooks
       
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
       
       - name: Get node and yarn versions
         id: node_yarn_versions
@@ -605,10 +516,6 @@ jobs:
     needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-ad-kibana-arm64]
     name: Test-AD-KIBANA
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - uses: actions/checkout@v1
       - name: Set up AWS Cred
@@ -638,10 +545,6 @@ jobs:
           ref: ${{env.p_tag_ad}}
           path: kibana/plugins/anomaly-detection-kibana-plugin
       
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
       
       - name: Get node and yarn versions
         id: node_yarn_versions
@@ -679,10 +582,6 @@ jobs:
     needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-sec-kibana-arm64]
     name: Test-SEC-KIBANA
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [14]
     steps:
       - uses: actions/checkout@v1
       - name: Set up AWS Cred
@@ -710,11 +609,6 @@ jobs:
           repository: opendistro-for-elasticsearch/security-kibana-plugin
           ref: ${{env.p_tag_sec_kibana}}
           path: kibana/plugins/opendistro_security
-      
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
       
       - name: Get node and yarn versions
         id: node_yarn_versions
