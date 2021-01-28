@@ -19,7 +19,7 @@
 ###############################################################################################
 
 # This script allows users to manually assign parameters
-if [ "$#" -ne 2 ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]
+if [ "$#" -lt 2 ] || [ "$1" = "--help" ] || [ "$1" = "-h" ]
 then
   echo "Please assign 2 parameters when running this script"
   echo "Example: $0 \$SETUP_DISTRO \$SETUP_ACTION"
