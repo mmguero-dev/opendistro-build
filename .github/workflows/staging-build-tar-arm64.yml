@@ -652,7 +652,8 @@ jobs:
 
   CleanUp-Runners:
     #needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64, Test-ISM-NoSec, Test-ALERTING-NoSec, Test-SQL-NoSec, Test-KNN-NoSec, Test-AD-NoSec, Test-SQL, Test-AD, Test-ALERTING, Test-AD-KIBANA-NoSec, Test-SQL-KIBANA-NoSec, Test-AD-KIBANA, Test-SEC-KIBANA, Test-Kibana-Notebooks-NoSec]
-    needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64, Test-ISM-NoSec, Test-AD-KIBANA-NoSec]
+    #needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64, Test-ISM-NoSec, Test-AD-KIBANA-NoSec]
+    needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64]
     if: always()
     name: CleanUp-Runners
     runs-on: ubuntu-18.04
