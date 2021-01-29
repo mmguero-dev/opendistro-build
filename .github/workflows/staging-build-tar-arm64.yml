@@ -106,9 +106,9 @@ jobs:
      
       - name: Install correct yarn version for Kibana
         run: |
-          npm uninstall -g yarn
+          sudo npm uninstall -g yarn
           echo "Installing yarn ${{ env.kibana_yarn_version }}"
-          npm i -g yarn@${{ env.kibana_yarn_version }}
+          sudo npm i -g yarn@${{ env.kibana_yarn_version }}
      
       - name: Bootstrap the plugin
         run: |
