@@ -98,6 +98,7 @@ jobs:
           #/usr/local/lib/nodejs/node-v10.15.0-linux-armv7l/bin/node -v
           sudo apt-get update
           sudo apt-get install -y nodejs
+          sudo apt-get install -y npm
           #which npm
           #which node
           #ls -ltr /usr/local/lib/nodejs/node-v10.15.0-linux-armv7l/bin
