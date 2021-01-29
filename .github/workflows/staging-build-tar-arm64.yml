@@ -88,6 +88,8 @@ jobs:
         id: node_yarn_versions
         run: |
           sudo apt-get update
+          curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh
+          sudo bash nodesource_setup.sh
           sudo apt-get install -y nodejs
           sudo apt-get install -y npm
           sudo npm i -g npx
