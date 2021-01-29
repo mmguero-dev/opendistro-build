@@ -95,12 +95,15 @@ jobs:
           export PATH=/usr/local/lib/nodejs/node-$VERSION-$DISTRO/bin:$PATH
           echo $PATH
           ls -ltr
-          which npm
-          which node
-          ls -ltr /usr/local/lib/nodejs/node-v10.15.0-linux-armv7l/bin
+          /usr/local/lib/nodejs/node-v10.15.0-linux-armv7l/bin/node -v
+          sudo apt-get update
+          sudo apt-get install nodejs
+          #which npm
+          #which node
+          #ls -ltr /usr/local/lib/nodejs/node-v10.15.0-linux-armv7l/bin
           #. ~/.profile
           #node -v
-          npm -v
+          #npm -v
           #echo "kibana_node_version=$(node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
           #echo "kibana_yarn_version=$(node -p "(require('./kibana/package.json').engines.yarn).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV   
      
