@@ -87,14 +87,14 @@ jobs:
       - name: Get node and yarn versions
         id: node_yarn_versions
         run: |
-          VERSION=v10.15.0
-          DISTRO=linux-armv7l
-          wget -q https://nodejs.org/dist/$VERSION/node-$VERSION-$DISTRO.tar.gz
-          sudo mkdir -p /usr/local/lib/nodejs
-          sudo tar -xvf node-$VERSION-$DISTRO.tar.gz -C /usr/local/lib/nodejs > log.txt
-          export PATH=/usr/local/lib/nodejs/node-$VERSION-$DISTRO/bin:$PATH
-          echo $PATH
-          ls -ltr
+          #VERSION=v10.15.0
+          #DISTRO=linux-armv7l
+          #wget -q https://nodejs.org/dist/$VERSION/node-$VERSION-$DISTRO.tar.gz
+          #sudo mkdir -p /usr/local/lib/nodejs
+          #sudo tar -xvf node-$VERSION-$DISTRO.tar.gz -C /usr/local/lib/nodejs > log.txt
+          #export PATH=/usr/local/lib/nodejs/node-$VERSION-$DISTRO/bin:$PATH
+          #echo $PATH
+          #ls -ltr
           #/usr/local/lib/nodejs/node-v10.15.0-linux-armv7l/bin/node -v
           sudo apt-get update
           sudo apt-get install -y nodejs
