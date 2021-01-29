@@ -121,7 +121,11 @@ jobs:
           sudo mkdir -p /usr/local/lib/nodejs
           sudo tar -xvf node-$VERSION-$DISTRO.tar.gz -C /usr/local/lib/nodejs > log.txt
           export PATH=/usr/local/lib/nodejs/node-$VERSION-$DISTRO/bin:$PATH
+          echo $PATH
           ls -ltr
+          which npm
+          which node
+          node -v
           npm -v
           npm i node-linux-arm64
           echo "kibana_node_version=$(node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
