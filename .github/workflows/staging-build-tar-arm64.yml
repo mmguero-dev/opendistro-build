@@ -271,7 +271,7 @@ jobs:
           export PATH=$JAVA_HOME:$PATH; cd $GITHUB_WORKSPACE/../anomaly-detection; pwd
           ./gradlew integTest -Dtests.rest.cluster=localhost:9200 -Dtests.cluster=localhost:9200 -Dtests.clustername="es-integrationtest" -Dhttps=true -Duser=admin -Dpassword=admin
   
- Test-ALERTING:
+  Test-ALERTING:
     needs: [build-es-artifacts-arm64]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-alerting-arm64]
     name: Test-ALERTING
