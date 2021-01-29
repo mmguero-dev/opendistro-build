@@ -118,10 +118,10 @@ jobs:
           VERSION=v10.15.0
           DISTRO=linux-armv7l
           wget -q https://nodejs.org/dist/$VERSION/node-$VERSION-$DISTRO.tar.gz
-          ls -ltr
           sudo mkdir -p /usr/local/lib/nodejs
           sudo tar -xvf node-$VERSION-$DISTRO.tar.gz -C /usr/local/lib/nodejs > log.txt
           export PATH=/usr/local/lib/nodejs/node-$VERSION-$DISTRO/bin:$PATH
+          ls -ltr
           npm -v
           npm i node-linux-arm64
           echo "kibana_node_version=$(node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
