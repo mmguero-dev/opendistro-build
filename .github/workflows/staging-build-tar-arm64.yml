@@ -117,7 +117,7 @@ jobs:
         run: |
           VERSION=v10.15.0
           DISTRO=linux-armv7l
-          wget https://nodejs.org/dist/v8.9.0/node-$VERSION-$DISTRO.tar.gz
+          wget https://nodejs.org/dist/$VERSION/node-$VERSION-$DISTRO.tar.gz
           sudo mkdir -p /usr/local/lib/nodejs
           sudo tar -xJvf node-$VERSION-$DISTRO.tar.xz -C /usr/local/lib/nodejs
           export PATH=/usr/local/lib/nodejs/node-$VERSION-$DISTRO/bin:$PATH
