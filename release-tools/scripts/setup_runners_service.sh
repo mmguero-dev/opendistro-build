@@ -29,7 +29,7 @@ fi
 
 SETUP_DISTRO=$1
 SETUP_ACTION=$2
-ARCHITECTURE="x64"; if [ ! -z "$3" ]; then ARCHITECTURE=$2; fi; echo ARCHITECTURE $ARCHITECTURE
+ARCHITECTURE="x64"; if [ ! -z "$3" ]; then ARCHITECTURE=$3; fi; echo ARCHITECTURE $ARCHITECTURE
 SETUP_PACKAGES="python3 git unzip wget jq"
 
 echo "install required packages"
