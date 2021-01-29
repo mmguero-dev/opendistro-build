@@ -44,7 +44,7 @@ jobs:
           RUNNERS="odfe-tar-build-es-arm64,odfe-tar-build-kibana-arm64,"
           ##RUNNERS="odfe-tar-ism-nosec-arm64,odfe-tar-ad-kibana-nosec-arm64"
           RUNNERS+="odfe-tar-ism-nosec-arm64,odfe-tar-alerting-nosec-arm64,odfe-tar-sql-nosec-arm64,odfe-tar-knn-nosec-arm64,odfe-tar-ad-nosec-arm64,"
-          RUNNERS+="odfe-tar-sql-arm64,odfe-tar-ad-arm64,odfe-tar-alerting-arm64"
+          RUNNERS+="odfe-tar-sql-arm64,odfe-tar-ad-arm64,odfe-tar-alerting-arm64,odfe-tar-ad-kibana-nosec-arm64"
           #RUNNERS+="odfe-tar-ad-kibana-nosec-arm64,odfe-tar-sql-kibana-nosec-arm64,"
           #RUNNERS+="odfe-tar-ad-kibana-arm64,odfe-tar-sec-kibana-arm64,odfe-tar-kibana-nb-nosec-arm64"
           release-tools/scripts/setup_runners.sh run $RUNNERS ${{ secrets.ODFE_RELEASE_BOT_PUBLIC_PRIVATE_READ_WRITE_TOKEN }} ami-055197d43e4ec7482
@@ -299,73 +299,72 @@ jobs:
           ls -ltr
           ../gradlew integTest -Dtests.rest.cluster=localhost:9200 -Dtests.cluster=localhost:9200 -Dtests.clustername=es-integrationtest -Dhttps=true -Duser=admin -Dpassword=admin -Dsecurity=true
                
-#  Test-AD-KIBANA-NoSec:
-#    needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64]
-#    runs-on: [self-hosted, Linux, ARM64, odfe-tar-ad-kibana-nosec-arm64]
-#    name: Test-AD-KIBANA-NoSec
-#    steps:
-#      - uses: actions/checkout@v1
-#      - name: Set up AWS Cred
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
-#          aws-region: us-east-1
-#      - name: Required Packages
-#        run: ./release-tools/scripts/required_packages.sh
-#      - name: Retrieve plugin tags 
-#        run: |
-#          echo "p_tag_ad=$(release-tools/scripts/plugin_tag.sh opendistro-for-elasticsearch/anomaly-detection-kibana-plugin)" >> $GITHUB_ENV
-#          echo "es_version=$(release-tools/scripts/version-info.sh --es)" >> $GITHUB_ENV
+  Test-AD-KIBANA-NoSec:
+    needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64]
+    runs-on: [self-hosted, Linux, ARM64, odfe-tar-ad-kibana-nosec-arm64]
+    name: Test-AD-KIBANA-NoSec
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up AWS Cred
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Required Packages
+        run: ./release-tools/scripts/required_packages.sh
+      - name: Retrieve plugin tags 
+        run: |
+          echo "p_tag_ad=$(release-tools/scripts/plugin_tag.sh opendistro-for-elasticsearch/anomaly-detection-kibana-plugin)" >> $GITHUB_ENV
+          echo "es_version=$(release-tools/scripts/version-info.sh --es)" >> $GITHUB_ENV
           
-#      - name: Checkout Kibana
-#        uses: actions/checkout@v2
-#        with:
-#          repository: opendistro-for-elasticsearch/kibana-oss
-#          ref: ${{env.es_version}}
-#          token: ${{ secrets.ODFE_RELEASE_BOT_PUBLIC_PRIVATE_READ_WRITE_TOKEN }}
-#          path: kibana
+      - name: Checkout Kibana
+        uses: actions/checkout@v2
+        with:
+          repository: opendistro-for-elasticsearch/kibana-oss
+          ref: ${{env.es_version}}
+          token: ${{ secrets.ODFE_RELEASE_BOT_PUBLIC_PRIVATE_READ_WRITE_TOKEN }}
+          path: kibana
            
-#      - uses: actions/checkout@v2
-#        with:
-#          repository: opendistro-for-elasticsearch/anomaly-detection-kibana-plugin
-#          ref: ${{env.p_tag_ad}}
-#          path: kibana/plugins/anomaly-detection-kibana-plugin
+      - uses: actions/checkout@v2
+        with:
+          repository: opendistro-for-elasticsearch/anomaly-detection-kibana-plugin
+          ref: ${{env.p_tag_ad}}
+          path: kibana/plugins/anomaly-detection-kibana-plugin
       
+      - name: Get node and yarn versions
+        id: node_yarn_versions
+        run: |
+          npm -v
+          npm i node-linux-arm64
+          echo "kibana_node_version=$(node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
+          echo "kibana_yarn_version=$(node -p "(require('./kibana/package.json').engines.yarn).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV   
       
-#      - name: Get node and yarn versions
-#        id: node_yarn_versions
-#        run: |
-#          npm -v
-#          npm i node-linux-arm64
-#          echo "kibana_node_version=$(node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
-#          echo "kibana_yarn_version=$(node -p "(require('./kibana/package.json').engines.yarn).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV   
-      
-#      - name: Setup node
-#        uses: actions/setup-node@v1
-#        with:
-#          node-version: ${{env.kibana_node_version}}
-#          registry-url: 'https://registry.npmjs.org'
-      
-#      - name: Install correct yarn version for Kibana
-#        run: |
-#          npm uninstall -g yarn
-#          echo "Installing yarn ${{ env.kibana_yarn_version }}"
-#          npm i -g yarn@${{ env.kibana_yarn_version }}
-      
-#      - name: Bootstrap the plugin
-#        run: |
-#          cd ./kibana/plugins/anomaly-detection-kibana-plugin
-#          yarn kbn bootstrap
-          
-#      - name: Start ES and Kibana
-#        run: ./release-tools/scripts/setup_runners_service.sh zip --kibana-nosec arm64
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{env.kibana_node_version}}
+          registry-url: 'https://registry.npmjs.org'
+     
+      - name: Install correct yarn version for Kibana
+        run: |
+          npm uninstall -g yarn
+          echo "Installing yarn ${{ env.kibana_yarn_version }}"
+          npm i -g yarn@${{ env.kibana_yarn_version }}
+     
+      - name: Bootstrap the plugin
+        run: |
+          cd ./kibana/plugins/anomaly-detection-kibana-plugin
+          yarn kbn bootstrap
+         
+      - name: Start ES and Kibana
+        run: ./release-tools/scripts/setup_runners_service.sh zip --kibana-nosec arm64
  
-#      - name: run IT
-#        uses: cypress-io/github-action@v2.5.0
-#        with:
-#          working-directory: kibana/plugins/anomaly-detection-kibana-plugin
-#          command: yarn cy:run --config baseurl=http://localhost:5601
+      - name: run IT
+        uses: cypress-io/github-action@v2.5.0
+        with:
+          working-directory: kibana/plugins/anomaly-detection-kibana-plugin
+          command: yarn cy:run --config baseurl=http://localhost:5601
     
 #  Test-SQL-KIBANA-NoSec:
 #    needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64]
@@ -647,7 +646,7 @@ jobs:
   CleanUp-Runners:
     #needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64, Test-ISM-NoSec, Test-ALERTING-NoSec, Test-SQL-NoSec, Test-KNN-NoSec, Test-AD-NoSec, Test-SQL, Test-AD, Test-ALERTING, Test-AD-KIBANA-NoSec, Test-SQL-KIBANA-NoSec, Test-AD-KIBANA, Test-SEC-KIBANA, Test-Kibana-Notebooks-NoSec]
     #needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64, Test-ISM-NoSec, Test-AD-KIBANA-NoSec]
-    needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64, Test-ISM-NoSec]
+    needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64, Test-ISM-NoSec, Test-ALERTING-NoSec, Test-SQL-NoSec, Test-KNN-NoSec, Test-AD-NoSec, Test-SQL, Test-AD, Test-ALERTING, Test-AD-KIBANA-NoSec]
     if: always()
     name: CleanUp-Runners
     runs-on: ubuntu-18.04
@@ -667,7 +666,7 @@ jobs:
           RUNNERS="odfe-tar-build-es-arm64,odfe-tar-build-kibana-arm64,"
           ##RUNNERS="odfe-tar-ism-nosec-arm64,odfe-tar-ad-kibana-nosec-arm64"
           RUNNERS+="odfe-tar-ism-nosec-arm64,odfe-tar-alerting-nosec-arm64,odfe-tar-sql-nosec-arm64,odfe-tar-knn-nosec-arm64,odfe-tar-ad-nosec-arm64,"
-          RUNNERS+="odfe-tar-sql-arm64,odfe-tar-ad-arm64,odfe-tar-alerting-arm64"
+          RUNNERS+="odfe-tar-sql-arm64,odfe-tar-ad-arm64,odfe-tar-alerting-arm64,odfe-tar-ad-kibana-nosec-arm64"
           #RUNNERS+="odfe-tar-ad-kibana-nosec-arm64,odfe-tar-sql-kibana-nosec-arm64,"
           #RUNNERS+="odfe-tar-ad-kibana-arm64,odfe-tar-sec-kibana-arm64,odfe-tar-kibana-nb-nosec-arm64"
           release-tools/scripts/setup_runners.sh terminate $RUNNERS ${{ secrets.ODFE_RELEASE_BOT_PUBLIC_PRIVATE_READ_WRITE_TOKEN }}
