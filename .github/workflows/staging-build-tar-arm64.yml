@@ -97,6 +97,7 @@ jobs:
           ls -ltr
           which npm
           which node
+          ls -ltr /usr/local/lib/nodejs/node-v10.15.0-linux-armv7l/bin
           #. ~/.profile
           #node -v
           #npm -v
