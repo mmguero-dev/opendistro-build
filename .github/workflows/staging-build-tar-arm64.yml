@@ -42,7 +42,7 @@ jobs:
           # Please add comma at the end of the RUNNERS strings
           # Don't add space after commas
           ##RUNNERS="odfe-tar-build-es-arm64,odfe-tar-build-kibana-arm64,"
-          RUNNERS="odfe-tar-ism-nosec-arm64,odfe-tar-ad-kibana-nosec-arm64"
+          RUNNERS="odfe-tar-ad-kibana-nosec-arm64"
           #RUNNERS+="odfe-tar-ism-nosec-arm64,odfe-tar-alerting-nosec-arm64,odfe-tar-sql-nosec-arm64,odfe-tar-knn-nosec-arm64,odfe-tar-ad-nosec-arm64,"
           #RUNNERS+="odfe-tar-sql-arm64,odfe-tar-ad-arm64,odfe-tar-alerting-arm64,odfe-tar-ad-kibana-nosec-arm64"
           #RUNNERS+="odfe-tar-ad-kibana-nosec-arm64,odfe-tar-sql-kibana-nosec-arm64,"
@@ -51,34 +51,6 @@ jobs:
 
 
 
-  Test-ISM-NoSec:
-    needs: [Provision-Runners]
-    runs-on: [self-hosted, Linux, ARM64, odfe-tar-ism-nosec-arm64]
-    name: Test-ISM-NoSec
-    steps:
-      - name: Set up AWS Cred
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      - uses: actions/checkout@v1
-      - name: Required Packages
-        run: ./release-tools/scripts/required_packages.sh
-      - name: Retrieve plugin tags
-        run:  echo "p_tag_ism=$(release-tools/scripts/plugin_tag.sh opendistro-for-elasticsearch/index-management)" >> $GITHUB_ENV
-      - name: Checkout ISM
-        uses: actions/checkout@v1
-        with:
-          repository: opendistro-for-elasticsearch/index-management
-          ref: ${{env.p_tag_ism}}
-      - name: IT
-        run: |
-          ./release-tools/scripts/setup_runners_service.sh zip --es-nosec arm64
-          export PATH=$JAVA_HOME:$PATH; cd $GITHUB_WORKSPACE/../index-management; pwd
-          ./gradlew integTest -Dtests.rest.cluster=localhost:9200 -Dtests.cluster=localhost:9200 -Dtests.clustername=es-integrationtest
-
-               
   Test-AD-KIBANA-NoSec:
     needs: [Provision-Runners]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-ad-kibana-nosec-arm64]
@@ -437,7 +409,7 @@ jobs:
 
   CleanUp-Runners:
     #needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64, Test-ISM-NoSec, Test-ALERTING-NoSec, Test-SQL-NoSec, Test-KNN-NoSec, Test-AD-NoSec, Test-SQL, Test-AD, Test-ALERTING, Test-AD-KIBANA-NoSec, Test-SQL-KIBANA-NoSec, Test-AD-KIBANA, Test-SEC-KIBANA, Test-Kibana-Notebooks-NoSec]
-    needs: [Test-ISM-NoSec, Test-AD-KIBANA-NoSec]
+    needs: [Test-AD-KIBANA-NoSec]
     #needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64, Test-ISM-NoSec, Test-ALERTING-NoSec, Test-SQL-NoSec, Test-KNN-NoSec, Test-AD-NoSec, Test-SQL, Test-AD, Test-ALERTING, Test-AD-KIBANA-NoSec]
     if: always()
     name: CleanUp-Runners
@@ -456,7 +428,7 @@ jobs:
           # Please add comma at the end of the RUNNERS strings
           # Don't add space after commas
           ##RUNNERS="odfe-tar-build-es-arm64,odfe-tar-build-kibana-arm64,"
-          RUNNERS="odfe-tar-ism-nosec-arm64,odfe-tar-ad-kibana-nosec-arm64"
+          RUNNERS="odfe-tar-ad-kibana-nosec-arm64"
           #RUNNERS+="odfe-tar-ism-nosec-arm64,odfe-tar-alerting-nosec-arm64,odfe-tar-sql-nosec-arm64,odfe-tar-knn-nosec-arm64,odfe-tar-ad-nosec-arm64,"
           #RUNNERS+="odfe-tar-sql-arm64,odfe-tar-ad-arm64,odfe-tar-alerting-arm64,odfe-tar-ad-kibana-nosec-arm64"
           #RUNNERS+="odfe-tar-ad-kibana-nosec-arm64,odfe-tar-sql-kibana-nosec-arm64,"
