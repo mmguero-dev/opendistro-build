@@ -41,52 +41,46 @@ jobs:
           #!/bin/bash
           # Please add comma at the end of the RUNNERS strings
           # Don't add space after commas
-          RUNNERS="odfe-tar-build-es-arm64,odfe-tar-build-kibana-arm64,"
-          RUNNERS="odfe-tar-ad-kibana-nosec-arm64"
+          ##RUNNERS="odfe-tar-build-es-arm64,odfe-tar-build-kibana-arm64,"
+          RUNNERS="odfe-tar-ism-nosec-arm64,odfe-tar-ad-kibana-nosec-arm64"
           #RUNNERS+="odfe-tar-ism-nosec-arm64,odfe-tar-alerting-nosec-arm64,odfe-tar-sql-nosec-arm64,odfe-tar-knn-nosec-arm64,odfe-tar-ad-nosec-arm64,"
-          #RUNNERS+="odfe-tar-sql-arm64,odfe-tar-ad-arm64,odfe-tar-alerting-arm64,"
+          #RUNNERS+="odfe-tar-sql-arm64,odfe-tar-ad-arm64,odfe-tar-alerting-arm64,odfe-tar-ad-kibana-nosec-arm64"
           #RUNNERS+="odfe-tar-ad-kibana-nosec-arm64,odfe-tar-sql-kibana-nosec-arm64,"
           #RUNNERS+="odfe-tar-ad-kibana-arm64,odfe-tar-sec-kibana-arm64,odfe-tar-kibana-nb-nosec-arm64"
           release-tools/scripts/setup_runners.sh run $RUNNERS ${{ secrets.ODFE_RELEASE_BOT_PUBLIC_PRIVATE_READ_WRITE_TOKEN }} ami-055197d43e4ec7482
 
-  build-es-artifacts-arm64:
+
+
+  Test-ISM-NoSec:
     needs: [Provision-Runners]
-    name: Build ES Artifacts ARM64
-    runs-on: [self-hosted, Linux, ARM64, odfe-tar-build-es-arm64]
+    runs-on: [self-hosted, Linux, ARM64, odfe-tar-ism-nosec-arm64]
+    name: Test-ISM-NoSec
     steps:
-      - uses: actions/checkout@v1
-      - name: Configure AWS Credentials
+      - name: Set up AWS Cred
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Required Packages
-        run: ./release-tools/scripts/required_packages.sh
-      - name: Build tar
-        run: set -u; ./elasticsearch/linux_distributions/opendistro-tar-build.sh linux arm64
-
-  build-kibana-artifacts-arm64:
-    needs: [Provision-Runners]
-    name: Build KIBANA Artifacts ARM64
-    runs-on: [self-hosted, Linux, ARM64, odfe-tar-build-kibana-arm64]
-    steps:
       - uses: actions/checkout@v1
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_STAGING_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_STAGING_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
       - name: Required Packages
         run: ./release-tools/scripts/required_packages.sh
-      - name: Build Kibana
-        run: ./kibana/linux_distributions/opendistro-kibana-build.sh tar linux arm64
-
+      - name: Retrieve plugin tags
+        run:  echo "p_tag_ism=$(release-tools/scripts/plugin_tag.sh opendistro-for-elasticsearch/index-management)" >> $GITHUB_ENV
+      - name: Checkout ISM
+        uses: actions/checkout@v1
+        with:
+          repository: opendistro-for-elasticsearch/index-management
+          ref: ${{env.p_tag_ism}}
+      - name: IT
+        run: |
+          ./release-tools/scripts/setup_runners_service.sh zip --es-nosec arm64
+          export PATH=$JAVA_HOME:$PATH; cd $GITHUB_WORKSPACE/../index-management; pwd
+          ./gradlew integTest -Dtests.rest.cluster=localhost:9200 -Dtests.cluster=localhost:9200 -Dtests.clustername=es-integrationtest
 
                
   Test-AD-KIBANA-NoSec:
-    needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64]
+    needs: [Provision-Runners]
     runs-on: [self-hosted, Linux, ARM64, odfe-tar-ad-kibana-nosec-arm64]
     name: Test-AD-KIBANA-NoSec
     steps:
@@ -121,13 +115,13 @@ jobs:
       - name: Get node and yarn versions
         id: node_yarn_versions
         run: |
-          npm -v
           VERSION=v10.15.0
           DISTRO=linux-armv7l
           wget https://nodejs.org/dist/v8.9.0/node-$VERSION-$DISTRO.tar.gz
           sudo mkdir -p /usr/local/lib/nodejs
           sudo tar -xJvf node-$VERSION-$DISTRO.tar.xz -C /usr/local/lib/nodejs
           export PATH=/usr/local/lib/nodejs/node-$VERSION-$DISTRO/bin:$PATH
+          npm -v
           npm i node-linux-arm64
           echo "kibana_node_version=$(node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
           echo "kibana_yarn_version=$(node -p "(require('./kibana/package.json').engines.yarn).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV   
@@ -437,7 +431,7 @@ jobs:
 
   CleanUp-Runners:
     #needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64, Test-ISM-NoSec, Test-ALERTING-NoSec, Test-SQL-NoSec, Test-KNN-NoSec, Test-AD-NoSec, Test-SQL, Test-AD, Test-ALERTING, Test-AD-KIBANA-NoSec, Test-SQL-KIBANA-NoSec, Test-AD-KIBANA, Test-SEC-KIBANA, Test-Kibana-Notebooks-NoSec]
-    needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64, Test-AD-KIBANA-NoSec]
+    needs: [Test-ISM-NoSec, Test-AD-KIBANA-NoSec]
     #needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64, Test-ISM-NoSec, Test-ALERTING-NoSec, Test-SQL-NoSec, Test-KNN-NoSec, Test-AD-NoSec, Test-SQL, Test-AD, Test-ALERTING, Test-AD-KIBANA-NoSec]
     if: always()
     name: CleanUp-Runners
@@ -455,8 +449,8 @@ jobs:
           #!/bin/bash
           # Please add comma at the end of the RUNNERS strings
           # Don't add space after commas
-          RUNNERS="odfe-tar-build-es-arm64,odfe-tar-build-kibana-arm64,"
-          RUNNERS="odfe-tar-ad-kibana-nosec-arm64"
+          ##RUNNERS="odfe-tar-build-es-arm64,odfe-tar-build-kibana-arm64,"
+          RUNNERS="odfe-tar-ism-nosec-arm64,odfe-tar-ad-kibana-nosec-arm64"
           #RUNNERS+="odfe-tar-ism-nosec-arm64,odfe-tar-alerting-nosec-arm64,odfe-tar-sql-nosec-arm64,odfe-tar-knn-nosec-arm64,odfe-tar-ad-nosec-arm64,"
           #RUNNERS+="odfe-tar-sql-arm64,odfe-tar-ad-arm64,odfe-tar-alerting-arm64,odfe-tar-ad-kibana-nosec-arm64"
           #RUNNERS+="odfe-tar-ad-kibana-nosec-arm64,odfe-tar-sql-kibana-nosec-arm64,"
