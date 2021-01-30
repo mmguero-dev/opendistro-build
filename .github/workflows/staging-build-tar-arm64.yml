@@ -95,7 +95,6 @@ jobs:
           sudo apt-get install -y npm
           nvm install node
           #sudo apt-get install -y nodejs
-          sudo apt-get install -y npm
           sudo npm i -g npx
           node -v
           npm -v
