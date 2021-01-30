@@ -102,8 +102,8 @@ jobs:
           nvm -v
           echo "kibana_node_version=$(node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
           echo "kibana_yarn_version=$(node -p "(require('./kibana/package.json').engines.yarn).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
-          echo "#####" $kibana_node_version
-          nvm install $kibana_node_version && nvm alias default $kibana_node_version 
+          echo "#####" ${{ env.kibana_node_version }}
+          nvm install ${{ env.kibana_node_version }} && nvm alias default ${{ env.kibana_node_version }}
 
 #      - name: Setup node
 #        uses: actions/setup-node@v1
