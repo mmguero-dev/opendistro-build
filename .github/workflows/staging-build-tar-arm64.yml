@@ -92,9 +92,10 @@ jobs:
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion          
           #sudo apt-get update
-          #sudo apt-get install -y npm
+          sudo apt-get install -y npm
           nvm install node
           #sudo apt-get install -y nodejs
+          sudo apt-get install -y npm
           sudo npm i -g npx
           node -v
           npm -v
