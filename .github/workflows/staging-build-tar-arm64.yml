@@ -91,18 +91,19 @@ jobs:
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion          
-          sudo apt-get update
-          sudo apt-get install -y npm
-          sudo apt-get install -y nodejs
+          #sudo apt-get update
+          #sudo apt-get install -y npm
+          nvm install node
+          #sudo apt-get install -y nodejs
           sudo npm i -g npx
           node -v
           npm -v
           npx -v
+          nvm -v
           echo "kibana_node_version=$(node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
           echo "kibana_yarn_version=$(node -p "(require('./kibana/package.json').engines.yarn).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
           echo "#####" $kibana_node_version
-          nvm install $kibana_node_version
-     
+          nvm install $kibana_node_version && nvm alias default $kibana_node_version 
 
 #      - name: Setup node
 #        uses: actions/setup-node@v1
