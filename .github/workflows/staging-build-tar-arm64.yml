@@ -87,33 +87,8 @@ jobs:
       - name: Get node and yarn versions
         id: node_yarn_versions
         run: |
-          #sudo curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-          #export NVM_DIR="$HOME/.nvm"
-          #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          #[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion          
-          #sudo apt-get update
-          #sudo apt-get install -y npm
           echo "kibana_node_version=$(yq eval ".engines.node" ./kibana/package.json)" >> $GITHUB_ENV
           echo "kibana_yarn_version=$(yq eval ".engines.yarn" ./kibana/package.json)" >> $GITHUB_ENV
-          #nvm install ${{ env.kibana_node_version }} && nvm alias default ${{ env.kibana_node_version }}
-          #sudo apt-get install -y nodejs
-          #sudo npm i -g npx
-          #node -v
-          #npm -v
-          #npx -v
-          #nvm -v
-          #ls -ltr
-          #ls -ltr ./kibana/package.json
-          #yq eval ".engines.node" ./kibana/package.json
-          #node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]"
-          #echo "kibana_node_version=$(node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
-          #echo "kibana_yarn_version=$(node -p "(require('./kibana/package.json').engines.yarn).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
-          #echo "#####" $kibana_node_version
-          #echo "#####" ${{ env.kibana_node_version }}
-          #echo "#####" $kibana_yarn_version
-          #echo "#####" ${{ env.kibana_yarn_version }}
-          #nvm install ${{ env.kibana_node_version }} && nvm alias default ${{ env.kibana_node_version }}
-          #nvm install 10.22.1 && nvm alias default 10.22.1
 
       - name: Setup node
         uses: actions/setup-node@v1
@@ -123,36 +98,22 @@ jobs:
     
       - name: Install correct yarn and node version for Kibana
         run: |
-          #sudo curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-          #export NVM_DIR="$HOME/.nvm"
-          #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          #[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
           sudo apt-get install -y npm
           sudo npm uninstall -g yarn
           sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-          #sudo npm i -g npx
-          #nvm install ${{ env.kibana_node_version }} && nvm alias default ${{ env.kibana_node_version }}
           echo "Installing yarn ${{ env.kibana_yarn_version }}"
           sudo npm i -g yarn@${{ env.kibana_yarn_version }}
-          node -v
-          #npm -v
-          #npx -v
-          #nvm -v
      
       - name: Bootstrap the plugin
         run: |
-          #nvm install ${{ env.kibana_node_version }} && nvm alias default ${{ env.kibana_node_version }}
-          node -v
           cd ./kibana/plugins/anomaly-detection-kibana-plugin
           yarn kbn bootstrap
          
       - name: Start ES and Kibana
-        run: |
-          npm -v
-          ./release-tools/scripts/setup_runners_service.sh zip --kibana-nosec arm64
+        run: ./release-tools/scripts/setup_runners_service.sh zip --kibana-nosec arm64
  
       - name: run IT
-        uses: cypress-io/github-action@v2.7.2
+        uses: cypress-io/github-action@v2.5.0
         with:
           working-directory: kibana/plugins/anomaly-detection-kibana-plugin
           command: npm -v ; yarn cy:run --config baseurl=http://localhost:5601
