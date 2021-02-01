@@ -115,28 +115,28 @@ jobs:
           #nvm install ${{ env.kibana_node_version }} && nvm alias default ${{ env.kibana_node_version }}
           #nvm install 10.22.1 && nvm alias default 10.22.1
 
-#      - name: Setup node
-#        uses: actions/setup-node@v1
-#        with:
-#          node-version: ${{env.kibana_node_version}}
-#          registry-url: 'https://registry.npmjs.org'
-     
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{env.kibana_node_version}}
+          registry-url: 'https://registry.npmjs.org'
+    
       - name: Install correct yarn and node version for Kibana
         run: |
-          sudo curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+          #sudo curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+          #export NVM_DIR="$HOME/.nvm"
+          #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+          #[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
           sudo apt-get install -y npm
           sudo npm uninstall -g yarn
-          sudo npm i -g npx
-          nvm install ${{ env.kibana_node_version }} && nvm alias default ${{ env.kibana_node_version }}
+          #sudo npm i -g npx
+          #nvm install ${{ env.kibana_node_version }} && nvm alias default ${{ env.kibana_node_version }}
           echo "Installing yarn ${{ env.kibana_yarn_version }}"
           sudo npm i -g yarn@${{ env.kibana_yarn_version }}
           node -v
-          npm -v
-          npx -v
-          nvm -v
+          #npm -v
+          #npx -v
+          #nvm -v
      
       - name: Bootstrap the plugin
         run: |
