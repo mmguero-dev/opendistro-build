@@ -112,12 +112,21 @@ jobs:
       - name: Start ES and Kibana
         run: ./release-tools/scripts/setup_runners_service.sh zip --kibana-nosec arm64
  
+#      - name: run IT
+#        uses: cypress-io/github-action@v2.5.0
+#        with:
+#          working-directory: kibana/plugins/anomaly-detection-kibana-plugin
+#          command: npm install cypress --save-dev ; yarn cy:run --config baseurl=http://localhost:5601
+ 
       - name: run IT
-        uses: cypress-io/github-action@v2.5.0
-        with:
-          working-directory: kibana/plugins/anomaly-detection-kibana-plugin
-          command: npm install cypress --save-dev ; yarn cy:run --config baseurl=http://localhost:5601
-    
+        run: |
+          cd ./kibana/plugins/anomaly-detection-kibana-plugin
+          npm install cypress --save-dev
+          yarn cy:run --config baseurl=http://localhost:5601
+
+
+
+
 #  Test-SQL-KIBANA-NoSec:
 #    needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64]
 #    runs-on: [self-hosted, Linux, ARM64, odfe-tar-sql-kibana-nosec-arm64]
