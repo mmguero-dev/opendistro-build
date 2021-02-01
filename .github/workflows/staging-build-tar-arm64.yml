@@ -93,7 +93,9 @@ jobs:
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion          
           #sudo apt-get update
           sudo apt-get install -y npm
-          nvm install node
+          echo "kibana_node_version=$(yq eval ".engines.node" ./kibana-oss/package.json)" >> $GITHUB_ENV
+          echo "kibana_yarn_version=$(yq eval ".engines.yarn" ./kibana-oss/package.json)" >> $GITHUB_ENV
+          nvm install ${{ env.kibana_node_version }} && nvm alias default ${{ env.kibana_node_version }}
           #sudo apt-get install -y nodejs
           sudo npm i -g npx
           node -v
@@ -102,12 +104,12 @@ jobs:
           nvm -v
           ls -ltr
           ls -ltr ./kibana/package.json
-          node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]"
-          echo "kibana_node_version=$(node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
-          echo "kibana_yarn_version=$(node -p "(require('./kibana/package.json').engines.yarn).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
+          #node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]"
+          #echo "kibana_node_version=$(node -p "(require('./kibana/package.json').engines.node).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
+          #echo "kibana_yarn_version=$(node -p "(require('./kibana/package.json').engines.yarn).match(/[.0-9]+/)[0]")" >> $GITHUB_ENV
           echo "#####" ${{ env.kibana_node_version }}
           #nvm install ${{ env.kibana_node_version }} && nvm alias default ${{ env.kibana_node_version }}
-          nvm install 10.22.1 && nvm alias default 10.22.1
+          #nvm install 10.22.1 && nvm alias default 10.22.1
 
 #      - name: Setup node
 #        uses: actions/setup-node@v1
