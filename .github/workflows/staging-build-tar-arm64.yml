@@ -116,7 +116,7 @@ jobs:
         uses: cypress-io/github-action@v2.5.0
         with:
           working-directory: kibana/plugins/anomaly-detection-kibana-plugin
-          command: npm -v ; yarn cy:run --config baseurl=http://localhost:5601
+          command: npm install cypress --save-dev ; yarn cy:run --config baseurl=http://localhost:5601
     
 #  Test-SQL-KIBANA-NoSec:
 #    needs: [build-es-artifacts-arm64, build-kibana-artifacts-arm64]
