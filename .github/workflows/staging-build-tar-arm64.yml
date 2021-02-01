@@ -120,6 +120,7 @@ jobs:
  
       - name: run IT
         run: |
+          sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
           cd ./kibana/plugins/anomaly-detection-kibana-plugin
           yarn add cypress --dev
           yarn cy:run --config baseurl=http://localhost:5601
