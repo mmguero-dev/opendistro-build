@@ -34,7 +34,7 @@ jobs:
           ARTIFACT_URL="staging.artifacts.opendistroforelasticsearch.amazon.com"
           cd release-tools/scripts
           #action=${{github.event.client_payload.branch}}
-          action = "prod-sync"
+          action="prod-sync"
           if [ -z "$action" ]
           then
             ./prod-sync-artifacts.py 
