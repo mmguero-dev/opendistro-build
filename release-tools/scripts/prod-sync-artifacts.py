@@ -140,7 +140,7 @@ def main():
                     if plugin.get('release_candidate'):
                         print("\n")
                         plugin_basename = plugin.get('plugin_basename')
-                        print("Plugin name : " + plugin_name)
+                        print("Plugin name : " + plugin_basename)
                         plugin_version = plugin.get('plugin_version')
                         print("Plugin version : " + plugin_version)
                         plugin_category = plugin.get('plugin_category')
@@ -173,7 +173,7 @@ def main():
                             plugin_fullpath = rc_plugin_path + plugin_category + "/"
                             if plugin_build is not None:
                                 plugin_val = check_plugin(rc_bucket,plugin_fullpath,
-                                    plugin_name,plugin_version,plugin_build,spec)
+                                    plugin_basename,plugin_version,plugin_build,spec)
                                 if plugin_val:
                                     print("Plugin : " + plugin_val.split('/')[-1] + "\t Status : Found")
                                     plugin_state = "Found"
